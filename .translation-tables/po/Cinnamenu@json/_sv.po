@@ -1,0 +1,60 @@
+# Swedish translation for Cinnamenu@json.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Åke Engelbrektson <eson@svenskasprakfiler.se>, 2017-2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Cinnamenu@json\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-07-02 02:42+0100\n"
+"PO-Revision-Date: 2022-05-07 14:13+0200\n"
+"Last-Translator: Åke Engelbrektson <eson@svenskasprakfiler.se>\n"
+"Language-Team: Svenska Språkfiler <contactform@svenskasprakfiler.se>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+msgid "Smileys & Emotion"
+msgstr ""
+
+msgid "People & Body"
+msgstr ""
+
+msgid "Animals & Nature"
+msgstr ""
+
+msgid "Food & Drink"
+msgstr ""
+
+msgid "Travel & Places"
+msgstr ""
+
+msgid "Activities"
+msgstr ""
+
+msgid "Objects"
+msgstr ""
+
+msgid "Symbols"
+msgstr ""
+
+msgid "Flags"
+msgstr ""
+
+msgid "Show emoji category"
+msgstr ""
+
+msgid "Show emoji category in the menu"
+msgstr ""
+
+msgid "Web search suggestions"
+msgstr ""
+
+msgid ""
+"With web search option, also show search suggestions. (Note: This uses "
+"Google's search API)"
+msgstr ""

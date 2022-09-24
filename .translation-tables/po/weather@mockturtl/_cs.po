@@ -1,0 +1,94 @@
+# Czech translation for gnome-shell-extension-weather
+# Copyright (C) 2016
+# This file is distributed under the same license as the gnome-shell-extension-weather package.
+# FIRST AUTHOR <mhladik@seznam.cz>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 3.2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-05 09:07+0100\n"
+"PO-Revision-Date: 2022-02-16 19:24+0100\n"
+"Last-Translator: Bohuslav Kotál <fotobob1@centrum.cz>\n"
+"Language-Team: \n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
+
+#: 3.8/weather-applet.js:9710
+msgid ""
+"MET Office UK only covers the UK, please make sure your location is in the "
+"country"
+msgstr ""
+
+#: 3.8/weather-applet.js:13811
+msgid "Deutscher Wetterdienst"
+msgstr ""
+
+#: 3.8/weather-applet.js:13823
+msgid "Please select a different provider or location"
+msgstr ""
+
+#: 3.8/weather-applet.js:14120
+msgid "Weather Underground"
+msgstr ""
+
+#: 3.8/weather-applet.js:14309
+msgid "The API key you provided is invalid."
+msgstr ""
+
+#: 3.8/weather-applet.js:14316
+msgid "The location you provided was not found."
+msgstr ""
+
+#: 3.8/weather-applet.js:14352 3.8/weather-applet.js:14353
+msgid "Strong Storm"
+msgstr ""
+
+#: 3.8/weather-applet.js:14367 3.8/weather-applet.js:14368
+msgid "Rain and Snow"
+msgstr ""
+
+#: 3.8/weather-applet.js:14374 3.8/weather-applet.js:14375
+msgid "Rain and Sleet"
+msgstr ""
+
+#: 3.8/weather-applet.js:14423 3.8/weather-applet.js:14424
+msgid "Snow Showers"
+msgstr ""
+
+#: 3.8/weather-applet.js:14486 3.8/weather-applet.js:14487
+msgid "Breezy"
+msgstr ""
+
+#: 3.8/weather-applet.js:14500 3.8/weather-applet.js:14501
+msgid "Frigid"
+msgstr ""
+
+#: 3.8/weather-applet.js:14556 3.8/weather-applet.js:14557
+msgid "Mostly Clear"
+msgstr ""
+
+#: 3.8/weather-applet.js:16156
+msgid "Station Name: {stationName}"
+msgstr ""
+
+#: 3.8/weather-applet.js:16159
+msgid "Area: {stationArea}"
+msgstr ""
+
+#. 3.8->settings-schema.json->debug-options->title
+#. 3.8->settings-schema.json->logLevel->options
+msgid "Debug"
+msgstr ""
+
+#. 3.8->settings-schema.json->dataService->options
+msgid "Deutscher Wetterdienst (Germany only)"
+msgstr ""
+
+#. 3.8->settings-schema.json->dataService->options
+msgid "Weather Underground (key needed)"
+msgstr ""
