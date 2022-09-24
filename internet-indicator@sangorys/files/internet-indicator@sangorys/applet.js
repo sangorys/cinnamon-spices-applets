@@ -9,31 +9,25 @@ const Settings = imports.ui.settings;
 const QUtils = require('./js/QUtils.js');
 const QIcon = QUtils.QIcon;
 
-// FOR TRANSLATION
-const Gettext = imports.gettext;
+
 const UUID = "internet-indicator@sangorys";
-Gettext.bindtextdomain(UUID, GLib.get_home_dir() + '/.local/share/locale');
 
 var nbTry = 0;
 var message="init";
 var oldStderr="init";
-var debug = 0;
+var debug = 1;
 var verbose = 0;
+
+
+// pull: https://github.com/linuxmint/cinnamon-spices-applets
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 function printDebug(text) {
     if (debug == 1){
-        global.log(text);
+        global.logError(text);
     }
 }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-function _(str) {
-    return Gettext.dgettext(UUID, str);
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 class InternetIndicatorApplet extends Applet.TextIconApplet {
@@ -43,9 +37,10 @@ class InternetIndicatorApplet extends Applet.TextIconApplet {
     constructor(orientation, panel_height, instance_id) {
         super(orientation, panel_height, instance_id);
         
-        printDebug("Start internet-indicator applet");
+        printDebug("Start applet (Cyril)");
 
-        this.set_applet_tooltip(_("Initializing"));
+        //this.set_applet_icon_name("internet");
+        this.set_applet_tooltip(_("Is Internet connected ?"));
         //this.set_applet_label("NordVPN");
         this.connected = false;
         
@@ -53,12 +48,13 @@ class InternetIndicatorApplet extends Applet.TextIconApplet {
 		this.update_interval_when_no_internet = 3; // By default
 		this.update_interval_when_internet = 10; // By default
 
+		//Util.spawnCommandLine("/usr/sbin/notify-send Applet Start"); //OK
 
-        // Reload BTN : for future improvements...
+        // Reload BTN
         /*let reload_btn = new PopupMenu.PopupIconMenuItem(_("Reload Applet"), 'view-refresh-symbolic', QIcon.SYMBOLIC, {hover: true});
         reload_btn.connect('activate', this.reloadApplet.bind(this));
-        this._applet_context_menu.addMenuItem(reload_btn);
-        this._applet_context_menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());*/
+        this._applet_context_menu.addMenuItem(reload_btn);*/
+        // this._applet_context_menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
 
         try {
@@ -79,13 +75,24 @@ class InternetIndicatorApplet extends Applet.TextIconApplet {
             this._contentSection = new PopupMenu.PopupMenuSection();
             this.menu.addMenuItem(this._contentSection);
 			
-            /*// First item: // For futur use
+            /*// First item:
             let item = new PopupMenu.PopupIconMenuItem("Test Internet speed", "internet", St.IconType.FULLCOLOR);
 
             item.connect('activate', Lang.bind(this, function() {
                            this.testInternetFree();
                          }));
-            this.menu.addMenuItem(item); */
+            this.menu.addMenuItem(item);
+
+
+            // 2nd item:
+            item = new PopupMenu.PopupIconMenuItem("Test 2", "no-internet", St.IconType.FULLCOLOR);
+
+            item.connect('activate', Lang.bind(this, function() {
+                           //Util.spawnCommandLine("nordvpn connect --group p2p");
+                           //Util.spawnCommandLine("/usr/sbin/notify-send test on"); //OK
+                           this._send_ping();	
+                         }));
+            this.menu.addMenuItem(item);*/r
 
 
             // START THE PERIODIC TASK TO CHECK INTERNET CONNECTION
@@ -94,11 +101,13 @@ class InternetIndicatorApplet extends Applet.TextIconApplet {
 		catch (e) {
 			global.logError(e);
 		}
+
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     on_applet_clicked() {
+
         this.menu.toggle();
     }
 
@@ -142,7 +151,6 @@ class InternetIndicatorApplet extends Applet.TextIconApplet {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // THIS FUNCTION SHOULD BE REMOVED SOON IF NOT USED
     _new_freq(){
     	global.log(this.update_interval);
         if (this._updateLoopID) {
@@ -153,8 +161,29 @@ class InternetIndicatorApplet extends Applet.TextIconApplet {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    _get_status(){
+        let status = this._run_cmd("nordvpn status");
+        let result = status.split("\n")[0].split(": ")[1];
+        let outString;
+        if (result === "Connected"){
+            this.connected = true;
+            outString = "ON";
+        }else if (result === "Disconnected"){
+            this.connected = false;
+            outString = "OFF";
+        }else{
+            this.connected = false,
+            outString = "..."
+        }
+        this.set_applet_label(outString);
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     _update_loop() {
 		this._send_ping();	
+		//Util.spawnCommandLine("/usr/sbin/notify-send Applet '" + this.update_interval + "'"); //OK
+		//global.logError(this.update_interval);
 		this._updateLoopID = Mainloop.timeout_add(this.update_interval * 1000, Lang.bind(this, this._update_loop));
 	}
 
@@ -165,6 +194,7 @@ class InternetIndicatorApplet extends Applet.TextIconApplet {
 		// INIT
 		let [result, stdout, stderr] = ["", "", ""];
 		nbTry = nbTry + 1;
+		//Util.spawnCommandLine("/usr/sbin/notify-send Applet 'Scan " + nbTry + "'");
 		printDebug("Scan " + nbTry + " (period=" + this.update_interval + "s)");
 
 		
@@ -184,58 +214,57 @@ class InternetIndicatorApplet extends Applet.TextIconApplet {
         
         //////////////////////////////////////////////
         // ANALYZE THE PING ANSWER
-		//printDebug("analyse");  
+		//global.logError("analyse");  
+		//global.logError(stdout.toString());  
+		//global.logError(stderr.toString().length);
 		
 		if (stderr == "")
 		{
-			//printDebug("ping OK");  
+			//global.logError("ping OK");  
 			if (stderr.toString() != oldStderr)
 			{
-			  //printDebug("connected");
+			  //global.logError("connecté");
 			  oldStderr = stderr.toString();
-              let TextMessage = _("Internet OK");
-			  Util.spawnCommandLine("/usr/sbin/notify-send '" + TextMessage + "'");
-              this.set_applet_tooltip(TextMessage);
+			  Util.spawnCommandLine("/usr/sbin/notify-send 'Internet OK'");
+              this.set_applet_tooltip(_("Internet is connected :)"));
 			  this.update_interval = this.update_interval_when_internet;
 			  this.set_applet_icon_name("internet");
 			}
-			//else {printDebug("No change : still connected");}
+			//else {global.logError("Pas de changement : connecté");}
 		}
 		else
 		{
-			//printDebug("ping failed");  
+			//global.logError("ping failed");  
 			if (stderr.toString() != oldStderr)
 			{
-			  //printDebug("connected");
+			  //global.logError("déconnecté");
 			  oldStderr = stderr.toString();
-              let TextMessage = _("No Internet");
-			  Util.spawnCommandLine("/usr/sbin/notify-send '" + TextMessage + "'");
-              this.set_applet_tooltip(TextMessage);
+			  Util.spawnCommandLine("/usr/sbin/notify-send 'Pas d internet'");
+              this.set_applet_tooltip(_("No Internet  :("));
 			  this.update_interval = this.update_interval_when_no_internet;
 			  this.set_applet_icon_name("no-internet");
 			}
-			//else {printDebug("No change : still connected");}
+			//else {global.logError("Pas de changement : déconnecté");}
 		}
-		//printDebug("ping.end");
+		//global.logError("ping.fin");
 	}
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // WARNING : IS NEVER CALLED !!!! WHY ?
+    // WARNING : IS NEVER CALLED !!!!
     reloadApplet() {
-        let cmd = "dbus-send --session --dest=org.Cinnamon.LookingGlass --type=method_call /org/Cinnamon/LookingGlass org.Cinnamon.LookingGlass.ReloadExtension string:'internet-indicator@sangorys' string:'APPLET'";
-        printDebug(cmd);
+        let cmd = `dbus-send --session --dest=org.Cinnamon.LookingGlass --type=method_call /org/Cinnamon/LookingGlass org.Cinnamon.LookingGlass.ReloadExtension string:'${this.metadata.uuid}' string:'APPLET'`;
+        global.logError(cmd);
         Util.spawnCommandLine(cmd);
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // NOT USED YET. FOR FUTURE USAGE
     testInternetFree() {
         
 		// INIT
 		let [result, stdout, stderr] = ["", "", ""];
-		printDebug("testInternetFree ");
+		global.logError("testInternetFree ");
 
 
         //////////////////////////////////////////////
@@ -250,7 +279,9 @@ class InternetIndicatorApplet extends Applet.TextIconApplet {
 		catch (e) {
 			global.logError(e);
 		}
+		
 	}
+        
 }
 
 
